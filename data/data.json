@@ -1,0 +1,85 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Administrador",
+      "email": "admin@biblioteca.com",
+      "password": "admin",
+      "role": [
+        "admin"
+      ],
+      "verified": true
+    },
+    {
+      "id": 2,
+      "name": "Curador",
+      "email": "curador@biblioteca.com",
+      "password": "curador",
+      "role": [
+        "curador"
+      ],
+      "verified": true
+    },
+    {
+      "id": 3,
+      "name": "Fornecedor",
+      "email": "fornecedor@gmail.com",
+      "password": "fornecedor",
+      "role": [
+        "fornecedor"
+      ],
+      "verified": true
+    },
+    {
+      "id": 4,
+      "name": "Tomador",
+      "email": "tomador@gmail.com",
+      "password": "tomador",
+      "role": [
+        "tomador"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Teste",
+      "email": "teste@teste.com",
+      "password": "teste123",
+      "cpfCnpj": "899.609.120-00",
+      "docType": "CPF",
+      "documents": [
+        {
+          "name": "atestado.pdf",
+          "url": "/documents/pobv8-atestado.pdf"
+        },
+        {
+          "name": "carteirinha.pdf",
+          "url": "/documents/eoltp3g-carteirinha.pdf"
+        }
+      ],
+      "id": 5,
+      "roles": [
+        "tomador"
+      ]
+    },
+    {
+      "name": "Teste2",
+      "email": "teste2@teste.com",
+      "password": "teste123",
+      "cpfCnpj": "134.938.130-66",
+      "docType": "CPF",
+      "roles": [
+        "tomador",
+        "fornecedor"
+      ],
+      "documents": [
+        {
+          "name": "Carteirinha.png",
+          "url": "/documents/8cleff-Carteirinha.png"
+        }
+      ],
+      "id": 6
+    }
+  ],
+  "books": [],
+  "reports": []
+}

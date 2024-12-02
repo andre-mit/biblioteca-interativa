@@ -1,131 +1,153 @@
-'use client'
+"use client";
+import Link from "next/link";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
-import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
-import Link from 'next/link';
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { validationSchema } from "./validationSchema";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDownIcon } from "lucide-react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isRegistering, setIsRegistering] = useState(false)
-  const [cpfCnpj, setCpfCnpj] = useState('')
-  const [documentPhoto, setDocumentPhoto] = useState<File | null>(null)
-  const [lgpdConsent, setLgpdConsent] = useState(false)
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const { login } = useAuth()
-  const router = useRouter()
+  const router = useRouter();
+  const { login } = useAuth();
+  const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (isRegistering) {
-      // Handle registration logic here
-      console.log('Registering with:', { email, password, confirmPassword, cpfCnpj, documentPhoto, lgpdConsent })
-    } else {
-      const success = await login(email, password)
+  const form = useForm<z.infer<typeof validationSchema>>({
+    resolver: zodResolver(validationSchema),
+  });
+
+  const onSubmit = async (data: z.infer<typeof validationSchema>) => {
+    try {
+      const success = await login(data.email, data.password);
       if (success) {
-        router.push('/')
+        toast({ title: "Login efetuado com sucesso", variant: "default" });
+        router.push("/");
       } else {
-        alert('Login falhou. Por favor, tente novamente.')
+        toast({
+          title: "Login falhou. Verifique as informações e tente novamente.",
+          variant: "destructive",
+        });
       }
+    } catch (error) {
+      toast({
+        title:
+          "Ocorreu um erro ao tentar fazer login. Tente novamente mais tarde.",
+        variant: "destructive",
+      });
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h1 className="text-2xl font-bold mb-6 text-center">
-          {isRegistering ? 'Cadastro' : 'Login'}
-        </h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="email">E-mail</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+        <Breadcrumb className="mb-2">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-1">
+                  Autenticação
+                  <ChevronDownIcon />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem>
+                    <Link href="/register">Cadastro</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link
+                      href="#"
+                      className="text-muted-foreground cursor-not-allowed opacity-50 pointer-events-none"
+                    >
+                      Login
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbPage>Login</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <hr />
+        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="email">E-mail</FormLabel>
+                  <FormControl>
+                    <Input id="email" type="email" {...field} />
+                  </FormControl>
+                  <FormDescription>Insira seu email</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div>
-            <Label htmlFor="password">Senha</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="password">Senha</FormLabel>
+                  <FormControl>
+                    <Input id="password" type="password" {...field} />
+                  </FormControl>
+                  <FormDescription>Insira sua senha</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          {isRegistering && (
-            <>
-              <div>
-                <Label htmlFor="cpfCnpj">CPF/CNPJ</Label>
-                <Input
-                  id="cpfCnpj"
-                  type="text"
-                  value={cpfCnpj}
-                  onChange={(e) => setCpfCnpj(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="confirmPassword">Confirmar Senha</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex items-start space-x-2">
-                <Checkbox
-                  id="lgpdConsent"
-                  checked={lgpdConsent}
-                  onCheckedChange={(checked) => setLgpdConsent(checked as boolean)}
-                />
-                <div className="grid gap-1.5 leading-none">
-                  <Label htmlFor="lgpdConsent" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    Concordo com os termos da <Link href="#" className="underline">LGPD</Link>
-                  </Label>
-                  <p className="text-sm text-muted-foreground">
-                    Esta validação é necessária para autenticar sua identidade, conforme os artigos 7º e 11º da LGPD.
-                  </p>
-                </div>
-              </div>
-              <div>
-                <Label htmlFor="documentPhoto">Foto do Documento</Label>
-                <Input
-                  id="documentPhoto"
-                  type="file"
-                  onChange={(e) => setDocumentPhoto(e.target.files?.[0] || null)}
-                  required
-                />
-              </div>
-            </>
-          )}
-          <Button type="submit" className="w-full">
-            {isRegistering ? 'Cadastrar' : 'Entrar'}
-          </Button>
-        </form>
+            <Button type="submit" className="w-full">
+              Entrar
+            </Button>
+          </form>
+        </Form>
         <p className="mt-4 text-center">
-          {isRegistering ? 'Já tem uma conta?' : 'Não tem uma conta?'}
-          <Button
-            variant="link"
-            onClick={() => setIsRegistering(!isRegistering)}
-            className="ml-1"
-          >
-            {isRegistering ? 'Faça login' : 'Cadastre-se'}
-          </Button>
+          Já tem uma conta?
+          <Link href="/register" className="ml-1">
+            Cadastre-se
+          </Link>
         </p>
       </div>
     </div>
-  )
+  );
 }
-

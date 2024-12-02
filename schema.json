@@ -1,0 +1,83 @@
+{
+  "tables": {
+    "users": {
+      "id": "int",
+      "name": "string",
+      "email": "string",
+      "password": "string",
+      "role": "string",
+      "rating": "int",
+      "verified": "bool",
+      "reviews": [
+        {
+          "id": "int",
+          "rating": "int",
+          "comment": "string"
+        }
+      ],
+      "documents": [
+        {
+          "name": "string",
+          "url": "file"
+        }
+      ],
+      "notifications": [
+        {
+          "id": "int",
+          "message": "string",
+          "read": "bool",
+          "link": "string?"
+        }
+      ],
+      "books": [
+        {
+          "id": "int",
+          "baseBookId": "int",
+          "images": [
+            {
+              "id": "int",
+              "url": "string"
+            }
+          ]
+        }
+      ],
+      "blocked": {
+        "blocked": "bool",
+        "reason": "string?",
+        "until": "date?"
+      },
+      "contacts": ["int"]
+    },
+    "books": {
+      "id": "int",
+      "title": "string",
+      "author": "string",
+      "genre": "string",
+      "pages": "int",
+      "published": "date",
+      "baseImage": "string",
+      "rating": "int",
+      "reviews": [
+        {
+          "id": "int",
+          "rating": "int",
+          "comment": "string",
+          "user": "int"
+        }
+      ],
+      "users": [
+        {
+          "id": "int"
+        }
+      ]
+    },
+    "reports": {
+      "id": "int",
+      "reporter_id": "int",
+      "user_id": "int",
+      "book_id": "int?",
+      "reason": "string",
+      "stage": "pending|approved|rejected"
+    }
+  }
+}
