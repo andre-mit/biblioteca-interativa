@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/select";
 import Link from "next/link";
 
+import { useAuth } from "@/contexts/AuthContext";
+
 interface Book {
   id: string;
   title: string;
@@ -47,6 +49,7 @@ const fakeBooks: Book[] = [
 ];
 
 export default function BooksPage() {
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
 
@@ -80,21 +83,31 @@ export default function BooksPage() {
           </Select>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredBooks.map((book) => (
-            <Link href={`/livros/${book.id}`} key={book.id}>
-              <div className="border rounded-lg p-4 hover:shadow-lg transition-shadow">
-                <img
-                  src={book.coverUrl}
-                  alt={book.title}
-                  className="w-full h-48 object-cover mb-4"
-                />
-                <h2 className="text-lg font-semibold">{book.title}</h2>
-                <p className="text-gray-600">{book.author}</p>
-              </div>
+        <main className="flex flex-col gap-4">
+          {user && (user.roles.includes("admin") || user.roles.includes("fornecedor")) && (
+            <Link
+              className="bg-slate-800 rounded text-white p-3 w-fit self-end"
+              href="/livros/novo"
+            >
+              Fornecer Livro
             </Link>
-          ))}
-        </div>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {filteredBooks.map((book) => (
+              <Link href={`/livros/${book.id}`} key={book.id}>
+                <div className="border rounded-lg p-4 hover:shadow-lg transition-shadow">
+                  <img
+                    src={book.coverUrl}
+                    alt={book.title}
+                    className="w-full h-48 object-cover mb-4"
+                  />
+                  <h2 className="text-lg font-semibold">{book.title}</h2>
+                  <p className="text-gray-600">{book.author}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </main>
       </div>
     </Layout>
   );

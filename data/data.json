@@ -5,7 +5,7 @@
       "name": "Administrador",
       "email": "admin@biblioteca.com",
       "password": "admin",
-      "role": [
+      "roles": [
         "admin"
       ],
       "verified": true
@@ -15,7 +15,7 @@
       "name": "Curador",
       "email": "curador@biblioteca.com",
       "password": "curador",
-      "role": [
+      "roles": [
         "curador"
       ],
       "verified": true
@@ -25,7 +25,7 @@
       "name": "Fornecedor",
       "email": "fornecedor@gmail.com",
       "password": "fornecedor",
-      "role": [
+      "roles": [
         "fornecedor"
       ],
       "verified": true
@@ -35,7 +35,7 @@
       "name": "Tomador",
       "email": "tomador@gmail.com",
       "password": "tomador",
-      "role": [
+      "roles": [
         "tomador"
       ],
       "verified": true
